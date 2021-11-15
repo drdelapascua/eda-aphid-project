@@ -4,3 +4,4 @@
 
 
 # pull data
+data <- read.csv("data.csv")
