@@ -2,6 +2,9 @@
 
 # libraries
 
+#set wd
+setwd("~/GitHub/eda-aphid-project")
 
 # pull data
-data <- read.csv("data.csv")
+data <- read.csv("TM_aphid_herbiv_data.csv")
+
