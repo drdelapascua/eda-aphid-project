@@ -1,21 +1,21 @@
 ### Eda and Danielle - TM Aphid fieldwork data prep and LM
 
-# libraries----
+# Libraries----
 library(tidyverse)
 library(dplyr)
 library(lubridate)
 
-# set working directory ----
+# Set working directory ----
 setwd("~/GitHub/eda-aphid-project")
 
-# pull data & clean ----
+# Pull data & clean ----
 d <- read.csv("TM_aphid_herbiv_data.csv")
 d <- d[-c(29:61), ] #drops the 'NA' rows
 d <- d[,-c(15)] #drops the last row
 
 # > looking at response variables ----
 
-# question 1 - herbivory ~ aphid #
+# question 1 - herbivory ~ aphid density
 # categorical data
 ggplot(d, aes(x = leaf_dmg)) +
   geom_bar()
@@ -45,8 +45,8 @@ hist(x = d$aphid_count)
 hist(x = d$stem_thickness)
 hist(x = d$height)
 
-# Linear models
+# Linear models ----
 
-#Question 1: herbivory ~ 
+#Question 1: herbivory ~ aphid density
 
-#Question 2:
+#Question 2: aphid density ~ plant size
