@@ -4,8 +4,7 @@
 library(tidyverse)
 library(dplyr)
 library(lubridate)
-
-# test
+library(ggplot2)
 
 # Set working directory ----
 setwd("~/GitHub/eda-aphid-project")
@@ -14,6 +13,8 @@ setwd("~/GitHub/eda-aphid-project")
 d <- read.csv("TM_aphid_herbiv_data.csv")
 d <- d[-c(29:61), ] #drops the 'NA' rows
 d <- d[,-c(15)] #drops the last row
+
+# Data visualization ----
 
 # > looking at response variables ----
 
@@ -31,17 +32,22 @@ ggplot(d, aes(x = flwr_dmg)) +
 ggplot(d, aes(x = fruit_dmg)) +
   geom_bar()
 
+#it would be interesting to see these ^ combined, for example, do the individuals that have one type of herbivory have the other, etc
+
 # how do we plan to analyze this? we could try to combine, truncate, etc the above, or we could select one type of herbivory. 
 
 #could combine all into one "herbivore pressure" function, which may assign 'points' to each type of herbivory. a = 1 point, b = 2. Add up all the values from leaves, stem, fruit, flowers, and have one continuous "herbivore pressure" variable. we may also want to reformat the data to be easier to work with.
 
 # question 2 - aphid count ~ plant size
 hist(x = d$aphid_count)
+dlog <- log(d$aphid_count)
+hist(dlog) #more even spread
 
 # > looking at fixed effects ----
 
 #question 1 fixed effect is the same as the response variable for q2 above
 hist(x = d$aphid_count)
+
 
 #question 2
 hist(x = d$stem_thickness)
