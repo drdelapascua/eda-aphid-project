@@ -3,14 +3,16 @@
 # Libraries ----
 library(tidyverse)
 library(dplyr)
-library(lubridate)
+library(nlme)
+library(lme4)
+library(MuMIn)
 library(ggplot2)
 
 # Set working directory ----
 setwd("~/GitHub/eda-aphid-project")
 
 # Pull data & clean ----
-d <- read.csv("TM_aphid_herbiv_data.csv")
+d <- read.csv("TM_aphid_herbiv_data.csv") 
 d <- d[-c(29:61), ] #drops the 'NA' rows
 d <- d[,-c(15)] #drops the last row
 
@@ -40,8 +42,8 @@ ggplot(d, aes(x = fruit_dmg)) +
 
 # question 2 - aphid count ~ plant size
 hist(x = d$aphid_count)
-dlog <- log(d$aphid_count)
-hist(dlog) #more even spread
+d$log_aphid <- log(d$aphid_count) %>%
+  mutate(log_aphid = replace("-inf", 0)) #error here
 
 # > looking at fixed effects ----
 
@@ -55,6 +57,29 @@ hist(x = d$height)
 
 # Linear models ----
 
-#Question 1: herbivory ~ aphid density
+# > Question 1: herbivory ~ aphid density ----
 
-#Question 2: aphid density ~ plant size
+# > Question 2: aphid density ~ plant size ----
+mod.2 <- lm(aphid_count ~ height, data = d)
+mod.log2 <- lm(log_aphid ~ height, data = d)
+
+# Model diagnostics ----
+
+# > 1 variance homogeneity ----
+plot(mod.2, 1)
+
+### here you want to see a starrynight, no variation
+
+# > 2 normality of errors ----
+plot(mod.2, 2) #shows a qq plot
+
+###if all points fall on line, then normal, if big tail where falling off the line, not normal
+hist(resid(mod.2))
+
+
+# > 3 residual variance homogeneity ----
+plot(resid(mod.2) ~ d$height) #violin shape is bad
+boxplot(resid(mod.2) ~ d$height)
+
+# > 4 plot predicted values ----
+plot(aphid_count ~ height, data = d)
