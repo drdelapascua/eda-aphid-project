@@ -63,7 +63,6 @@ mod.1 <- lm(leaf_dmg ~ aphid_count , data = d)
 
 # > Question 2: aphid density ~ plant size ----
 
-
 mod.2 <- lm(aphid_count ~ height, data = d)
 mod.log2 <- lm(log_aphid ~ height, data = d)
 
@@ -105,15 +104,7 @@ ggplot(data = d, aes(x = stem_thickness, y = aphid_count)) +
   geom_point() +
   stat_smooth(method = "lm")#same here, medium plants have the most aphids
 
-
-# lm with aphid_count ~ size & fitness
-lm.3<- lm(aphid_count ~ height + fruit_count, data = d)
-summary(lm.3) #super low r2, 
-
-plot(lm.3, 1) # variance homogeneity 
-plot(lm.3, 2) # residual normality 
-
-anova(lm.3)
+# > using a quadratic 
 
 # Model Selection ----
 
@@ -135,5 +126,14 @@ ggplot(data = d, aes(x = fruit_count, y = height)) +
   geom_point() +
   stat_smooth(method = "lm")
 
+
 #yes, size and fruit number are correlated. So, we should include size as a covariate if we want to assess whether this affects fitness.
 
+# lm with aphid_count ~ size & fitness
+lm.3<- lm(aphid_count ~ height + fruit_count, data = d)
+summary(lm.3) #super low r2, 
+
+plot(lm.3, 1) # variance homogeneity 
+plot(lm.3, 2) # residual normality 
+
+anova(lm.3)
