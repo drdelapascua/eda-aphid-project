@@ -133,7 +133,7 @@ summary(mod.2)
 
 #midel with quadratic
 
-mod.q <- lm(aphid_count ~ height + height^2, data = d)
+mod.q <- lm(aphid_count ~ height + height^2, data = d) ##DANIELLE AND EDA STOPPED HERE 2-10-22
 summary(mod.q)
 anova(mod.q)
 
