@@ -40,6 +40,12 @@ ggplot(d, aes(x = fruit_dmg)) +
 
 #could combine all into one "herbivore pressure" function, which may assign 'points' to each type of herbivory. a = 1 point, b = 2. Add up all the values from leaves, stem, fruit, flowers, and have one continuous "herbivore pressure" variable. we may also want to reformat the data to be easier to work with.
 
+#plotting relationship
+ggplot(data = d, aes(x = leaf_dmg, y = aphid_count)) +
+  geom_boxplot()
+
+
+
 # question 2 - aphid count ~ plant size
 hist(x = d$aphid_count)
 d$log_aphid <- log(d$aphid_count) %>%
@@ -55,16 +61,20 @@ hist(x = d$aphid_count)
 hist(x = d$stem_thickness)
 hist(x = d$height)
 
+
 # Linear models ----
 
 # > Question 1: herbivory ~ aphid density ----
-mod.1 <- lm(leaf_dmg ~ aphid_count , data = d)
+mod.h <- lm(aphid_count ~ leaf_dmg, data = d)
+summary(mod.h)
+anova(mod.h)
 
-
+mod.stem <- lm(aphid_count ~ stem_dmg, data = d)
+summary(mod.stem)
 # > Question 2: aphid density ~ plant size ----
 
 mod.2 <- lm(aphid_count ~ height, data = d)
-mod.log2 <- lm(log_aphid ~ height, data = d)
+
 
 # Model diagnostics ----
 
@@ -93,7 +103,7 @@ boxplot(resid(mod.2) ~ d$height)
 ### can use base R
 plot(aphid_count ~ height, data = d)
 plot(aphid_count ~ stem_thickness, data = d)
-
+plot(height ~ stem_thickness, data = d)
 ### ... or ggplot
 ggplot(data = d, aes(x = height, y = aphid_count)) + 
   geom_point() +
@@ -114,6 +124,22 @@ summary(lm.all)
 plot(lm.all, 1)
 plot(lm.all, 2) #the high residual-quantile value from this qq plot seems like the model is overestimating aphid count at high fixed affect values  - we need a different dist!
 
+# LM with quadratic distribution ----
+
+#model without quadratic
+
+mod.2 <- lm(aphid_count ~ height, data = d)
+summary(mod.2)
+
+#midel with quadratic
+
+mod.q <- lm(aphid_count ~ height + height^2, data = d)
+summary(mod.q)
+anova(mod.q)
+
+plot(mod.q, 1)
+plot(mod.q, 2)
+
 # Other plots for data exploration ----
 
 ggplot(data = d, aes(x = aphid_count, y = fruit_count)) +
@@ -131,7 +157,7 @@ ggplot(data = d, aes(x = fruit_count, y = height)) +
 
 # lm with aphid_count ~ size & fitness
 lm.3<- lm(aphid_count ~ height + fruit_count, data = d)
-summary(lm.3) #super low r2, 
+summary(lm.3) #super low r2, which mean our model is explaining a very small part of the variation
 
 plot(lm.3, 1) # variance homogeneity 
 plot(lm.3, 2) # residual normality 
